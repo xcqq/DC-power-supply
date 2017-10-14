@@ -24,4 +24,13 @@ void GPIOOledSWInit(void)
 
 	GPIO_SetBits(GPIO_OLED_PORT, GPIO_OLED_ALL);
 }
+void GPIOADCConfig(void)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
 
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_GPIOB, ENABLE);
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_ADC_ALL;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+	GPIO_Init(GPIO_ADC_PORT, &GPIO_InitStructure);
+}

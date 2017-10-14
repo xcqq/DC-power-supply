@@ -29,9 +29,16 @@
 #define GPIO_ENCODER_C			GPIO_Pin_13
 #define GPIO_ENCODER_ALL		GPIO_ENCODER_BUTTON | GPIO_ENCODER_A | GPIO_ENCODER_C
 
+/*for voltage and current adc*/
+#define GPIO_ADC_PORT			GPIOB
+#define GPIO_ADC_VOLT			GPIO_Pin_0
+#define GPIO_ADC_CURRENT		GPIO_Pin_1
+#define GPIO_ADC_ALL			GPIO_ADC_VOLT | GPIO_ADC_CURRENT
+
 
 void GPIOOledSWInit(void);
 void GPIOEncoderInit(void);
+void GPIOADCConfig(void);
 
 
 #endif /* __GPIO_H */
