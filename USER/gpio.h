@@ -27,9 +27,11 @@
 #define GPIO_ENCODER_BUTTON		GPIO_Pin_15
 #define GPIO_ENCODER_A			GPIO_Pin_14
 #define GPIO_ENCODER_C			GPIO_Pin_13
+#define GPIO_ENCODER_ALL		GPIO_ENCODER_BUTTON | GPIO_ENCODER_A | GPIO_ENCODER_C
 
 
 void GPIOOledSWInit(void);
+void GPIOEncoderInit(void);
 
 
 #endif /* __GPIO_H */

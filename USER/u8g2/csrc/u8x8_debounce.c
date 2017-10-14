@@ -36,7 +36,7 @@
 */
 
 #include "u8x8.h"
-
+#include "include.h"
 static uint8_t u8x8_read_pin_state(u8x8_t *u8x8)
 {
   uint8_t i;
@@ -183,6 +183,7 @@ uint8_t u8x8_GetMenuEvent(u8x8_t *u8x8)
       u8x8->debounce_state--;	/* count down, until there is a valid state */
       break;
   }
+
   return result_msg;
 }
 
