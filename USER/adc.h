@@ -2,6 +2,9 @@
 #define	__ADC_H
 
 #include "include.h"
+
+
+
 void ADCInit(void);
 
 

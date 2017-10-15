@@ -1,5 +1,5 @@
 #include "exti.h"
-
+static void (*encoder_up_callback)(),void (*encoder_down_callback)();
 static unsigned char up_cnt = 0, down_cnt = 0;//for encoder pulse counter
 static void NVIC_Configuration(void)
 {
@@ -38,10 +38,18 @@ void EXTI15_10_IRQHandler(void)
 		if(GPIO_GET(GPIO_ENCODER_PORT, GPIO_ENCODER_C))
 		{
 			up_cnt+=10;
+			if(encoder_up_callback!=NULL)
+			{
+				encoder_up_callback();
+			}
 		}
 		else
 		{
 			down_cnt+=10;
+			if(encoder_down_callback != NULL)
+			{
+				encoder_down_callback();
+			}
 		}
 		EXTI_ClearITPendingBit(EXTI_Line14);
 	}
@@ -58,5 +66,18 @@ int EncoderGet()
 		down_cnt--;
 		return -1;
 	}
+	return 0;
+}
+
+int EncoderRegistCallback(void (*upCallback)(),void (*downCallback)())
+{
+	encoder_up_callback = upCallback;
+	encoder_down_callback = downCallback;
+	return 0;
+}
+int EncoderUnregistCallback()
+{
+	encoder_up_callback = NULL;
+	encoder_down_callback = NULL;
 	return 0;
 }
