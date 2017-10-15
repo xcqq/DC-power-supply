@@ -1,5 +1,6 @@
 #include "include.h"
 u8g2_t u8g2;
+
 int main(void)
 {
     SysTick_Init();
@@ -21,7 +22,7 @@ int main(void)
 	CalibrationCalcValue(&calibration_real_volt, &real_value, 20); 
     while(1)
     {
-		GuiPageOutput(0,0,0,0);
+		GuiPageOutput(volt_real, current_real, volt_set, current_set);
 		u8g2_SendBuffer(&u8g2);
     }
 }

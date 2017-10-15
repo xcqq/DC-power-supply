@@ -8,6 +8,7 @@
 
 void EXTIEncoderConfig(void);
 int EncoderGet();
-
+int EncoderRegistCallback(void (*upCallback)(), void (*downCallback)());
+int EncoderUnregistCallback();
 
 #endif /* __XXX_H */

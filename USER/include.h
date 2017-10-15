@@ -5,6 +5,7 @@
 #include "exti.h"
 #include "adc.h"
 #include "calibration.h"
+#include "gui.h"
 #include <stdio.h>
 
 extern u8g2_t u8g2;
