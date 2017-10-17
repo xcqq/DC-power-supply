@@ -2,12 +2,16 @@
 u8g2_t u8g2;
 
 int main(void)
-{
+{	
+    float real_value;
+	e_gui_page_t gui_page = GUI_PAGE_OUTPUT;
     SysTick_Init();
-	EXTIEncoderConfig();
+	
     oledInit(&u8g2);
 	ADCInit();
-	float real_value;
+	EXTIEncoderConfig(); 
+
+
 //    u8g2_SetFontMode(&u8g2,1);
 //    u8g2_SetFontDirection(&u8g2,0);
 //    u8g2_SetFont(&u8g2, u8g2_font_6x12_tf);
@@ -22,7 +26,19 @@ int main(void)
 	CalibrationCalcValue(&calibration_real_volt, &real_value, 20); 
     while(1)
     {
-		GuiPageOutput(volt_real, current_real, volt_set, current_set);
+		u8g2_ClearBuffer(&u8g2);
+		switch(gui_page)
+		{
+		case GUI_PAGE_CALIBRATION:
+			GuiPageCalibration(&gui_page);
+			break;
+		case GUI_PAGE_OUTPUT:
+			GuiPageOutput(&gui_page);
+			break;
+		case GUI_PAGE_MENU:
+			GuiPageMenu(&gui_page);
+			break;
+		}
 		u8g2_SendBuffer(&u8g2);
     }
 }

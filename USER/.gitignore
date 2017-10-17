@@ -1,3 +1,5 @@
 /JLinkLog.txt
 /JLinkSettings.ini
 *.TMP
+*.uvopt
+*.uvgui.*

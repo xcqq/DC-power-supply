@@ -1,7 +1,7 @@
 #include "exti.h"
 static void (*encoder_up_callback)();
 static void (*encoder_down_callback)();
-static unsigned char up_cnt = 0, down_cnt = 0;//for encoder pulse counter
+static unsigned long up_cnt = 0, down_cnt = 0;//for encoder pulse counter
 static void NVIC_Configuration(void)
 {
 	NVIC_InitTypeDef NVIC_InitStructure;

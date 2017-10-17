@@ -5,5 +5,6 @@
 
 void SysTick_Init(void);
 void Delay_us(__IO u32 nTime);
+uint32_t SystickGetMs();
 
 #endif /* __SYSTICK_H */

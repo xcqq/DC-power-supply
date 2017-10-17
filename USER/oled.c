@@ -1,12 +1,18 @@
 
 #include "oled.h"
-
+//#define OLED_HW_SPI
 static uint8_t u8x8_gpio_and_delay(u8x8_t *u8g2, uint8_t msg, uint8_t arg_int, void *arg_ptr)
 {
 	switch(msg)
 	{
 	case U8X8_MSG_GPIO_AND_DELAY_INIT:
+#ifdef OLED_HW_SPI
+		GPIOOledHWInit();
+		SPIInit();
+#else
 		GPIOOledSWInit();
+#endif
+		
 		break;
 
 	case U8X8_MSG_DELAY_MILLI:
@@ -33,7 +39,6 @@ static uint8_t u8x8_gpio_and_delay(u8x8_t *u8g2, uint8_t msg, uint8_t arg_int, v
 		//GPIO_SET(GPIO_OLED_PORT, GPIO_OLED_CLK, arg_int);
 		break;
 	case U8X8_MSG_DELAY_NANO:
-		Delay_us(1);
 		break;
 	case U8X8_MSG_GPIO_MENU_UP:
 		if(EncoderGet() > 0)
@@ -73,7 +78,7 @@ static uint8_t u8x8_byte_hw_spi(u8x8_t *u8g2, uint8_t msg, uint8_t arg_int, void
 	{
 	case U8X8_MSG_BYTE_SEND:
 		data = (uint8_t *)arg_ptr;
-
+		SPISendBytes(data,arg_int);
 		break;
 	case U8X8_MSG_BYTE_INIT:
 		u8x8_gpio_SetCS(u8g2, u8g2->display_info->chip_disable_level);
@@ -94,25 +99,14 @@ static uint8_t u8x8_byte_hw_spi(u8x8_t *u8g2, uint8_t msg, uint8_t arg_int, void
 	}
 	return 1;
 }
-static void u8x8_Setup_SH1106_128x64_NONAME(u8x8_t *u8x8)
-{
-	/* setup defaults */
-	u8x8_SetupDefaults(u8x8);
-
-	/* setup specific callbacks */
-	u8x8->display_cb = u8x8_d_sh1106_128x64_noname;
-	u8x8->cad_cb = u8x8_cad_001;
-	//u8x8->byte_cb = u8x8_byte_4wire_sw_spi;
-	u8x8->byte_cb = u8x8_byte_hw_spi;
-	u8x8->gpio_and_delay_cb = u8x8_gpio_and_delay;
-
-	/* setup display info */
-	u8x8_SetupMemory(u8x8);
-}
 
 void oledInit(u8g2_t *u8g2)
 {
-	u8g2_Setup_sh1106_128x64_noname_f(u8g2, U8G2_R0, u8x8_byte_4wire_sw_spi, u8x8_gpio_and_delay);
+#ifdef OLED_HW_SPI
+	u8g2_Setup_sh1106_128x64_noname_f(u8g2, U8G2_R0, u8x8_byte_hw_spi, u8x8_gpio_and_delay);
+#else
+	u8g2_Setup_sh1106_128x64_noname_f(u8g2, U8G2_R0, u8x8_byte_4wire_sw_spi, u8x8_gpio_and_delay); 
+#endif
 	u8g2_InitDisplay(u8g2);
 	u8g2_SetPowerSave(u8g2, 0);
 	u8g2_SetContrast(u8g2, 1);
