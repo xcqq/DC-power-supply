@@ -49,25 +49,37 @@ static void GuiAddCurrentSet(e_encoder_speed_t speed)
 	switch(speed)
 	{
 	case ENCODER_SPEED_FAST:
-		current_set += VOLT_SET_FAST_STEP;
+		current_set += CURRENT_SET_FAST_STEP;
 		break;
 	case ENCODER_SPEED_NORMAL:
-		current_set += VOLT_SET_NORMAL_STEP;
+		current_set += CURRENT_SET_NORMAL_STEP;
 		break;
 	case ENCODER_SPEED_SLOW:
-		current_set += VOLT_SET_SLOW_STEP;
+		current_set += CURRENT_SET_SLOW_STEP;
 		break;
 	}
-	if(current_set < CURRENT_SET_MAX)
+	if(current_set > CURRENT_SET_MAX)
 	{
-		current_set += 0.05;
+		current_set = CURRENT_SET_MAX;
 	}
 }
 static void GuiMinusCurrentSet(e_encoder_speed_t speed)
 {
-	if(current_set > 0.00001)
+	switch(speed)
 	{
-		current_set -= 0.05;
+	case ENCODER_SPEED_FAST:
+		current_set -= CURRENT_SET_FAST_STEP;
+		break;
+	case ENCODER_SPEED_NORMAL:
+		current_set -= CURRENT_SET_NORMAL_STEP;
+		break;
+	case ENCODER_SPEED_SLOW:
+		current_set -= CURRENT_SET_SLOW_STEP;
+		break;
+	}
+	if(current_set < 0)
+	{
+		current_set = 0;
 	}
 }
 static void GuiPopOut(char *title1, char *title2, char *title3)
