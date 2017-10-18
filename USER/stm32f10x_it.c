@@ -39,6 +39,7 @@
 /*            Cortex-M3 Processor Exceptions Handlers                         */
 /******************************************************************************/
 extern void TimingDelay_Decrement(void);
+
 /**
   * @brief  This function handles NMI exception.
   * @param  None

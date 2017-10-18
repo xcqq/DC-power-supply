@@ -9,6 +9,13 @@
 
 #define VOLT_SET_MAX 30
 #define CURRENT_SET_MAX 5
+#define VOLT_SET_FAST_STEP		1
+#define VOLT_SET_NORMAL_STEP	0.1
+#define VOLT_SET_SLOW_STEP		0.01
+
+#define CURRENT_SET_FAST_STEP	0.5
+#define CURRENT_SET_NORMAL_STEP	0.1
+#define CURRENT_SET_SLOW_STEP	0.01
 
 typedef enum
 {

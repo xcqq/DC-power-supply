@@ -3,7 +3,8 @@
 
 static __IO u32 TimingDelay;
 static volatile uint32_t tick_ms;
-
+extern unsigned long pulse_cnt; 
+extern unsigned long encoder_speed; 
 void SysTick_Init(void)
 {
 	/*10us one break*/

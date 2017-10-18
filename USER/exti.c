@@ -1,6 +1,7 @@
 #include "exti.h"
-static void (*encoder_up_callback)();
-static void (*encoder_down_callback)();
+
+static encoder_callback encoder_up_callback;
+static encoder_callback encoder_down_callback;
 static unsigned long up_cnt = 0, down_cnt = 0;//for encoder pulse counter
 static void NVIC_Configuration(void)
 {
@@ -33,15 +34,32 @@ void EXTIEncoderConfig(void)
 }
 void EXTI15_10_IRQHandler(void)
 {
+	static unsigned long last_time = 0;
+	uint32_t diff_time = 0;
+	static e_encoder_speed_t encoder_speed = ENCODER_SPEED_SLOW;
 	if(EXTI_GetITStatus(EXTI_Line14) != RESET)
 	{
-		
+		diff_time = SystickGetMs() - last_time;
+		if(diff_time < ENCODER_THRESHOLD_FAST)
+		{
+			encoder_speed = ENCODER_SPEED_FAST;
+		}
+		else if(diff_time > ENCODER_THRESHOLD_SLOW)
+		{
+			encoder_speed = ENCODER_SPEED_SLOW;
+		}
+		else
+		{
+			encoder_speed = ENCODER_SPEED_NORMAL;
+		}
+		last_time = SystickGetMs();
+
 		if(GPIO_GET(GPIO_ENCODER_PORT, GPIO_ENCODER_C))
 		{
 			up_cnt+=10;
 			if(encoder_up_callback!=NULL)
 			{
-				encoder_up_callback();
+				encoder_up_callback(encoder_speed);
 			}
 		}
 		else
@@ -49,7 +67,7 @@ void EXTI15_10_IRQHandler(void)
 			down_cnt+=10;
 			if(encoder_down_callback != NULL)
 			{
-				encoder_down_callback();
+				encoder_down_callback(encoder_speed);
 			}
 		}
 		EXTI_ClearITPendingBit(EXTI_Line14);
@@ -70,7 +88,7 @@ int EncoderGet()
 	return 0;
 }
 
-int EncoderRegistCallback(void (*upCallback)(),void (*downCallback)())
+int EncoderRegistCallback(encoder_callback upCallback, encoder_callback downCallback)
 {
 	encoder_up_callback = upCallback;
 	encoder_down_callback = downCallback;

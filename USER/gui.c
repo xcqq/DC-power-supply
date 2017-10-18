@@ -4,28 +4,66 @@ float volt_set = 0;
 float current_set = 0; 
 float volt_real = 0;
 float current_real = 0;
-static void GuiAddVoltSet()
+static void GuiAddVoltSet(e_encoder_speed_t speed)
 {
-	if(volt_set < VOLT_SET_MAX)
+
+	switch(speed)
 	{
-		volt_set += 0.05;
+	case ENCODER_SPEED_FAST:
+		volt_set += VOLT_SET_FAST_STEP;
+		break;
+	case ENCODER_SPEED_NORMAL:
+		volt_set += VOLT_SET_NORMAL_STEP;
+		break;
+	case ENCODER_SPEED_SLOW:
+		volt_set += VOLT_SET_SLOW_STEP;
+		break;
+	}
+	if(volt_set > VOLT_SET_MAX)
+	{
+		volt_set = VOLT_SET_MAX;
 	}
 }
-static void GuiMinusVoltSet()
+static void GuiMinusVoltSet(e_encoder_speed_t speed)
 {
-	if(volt_set>0.00001)
+
+	switch(speed)
 	{
-		volt_set -= 0.05;
+	case ENCODER_SPEED_FAST:
+		volt_set -= VOLT_SET_FAST_STEP;
+		break;
+	case ENCODER_SPEED_NORMAL:
+		volt_set -= VOLT_SET_NORMAL_STEP;
+		break;
+	case ENCODER_SPEED_SLOW:
+		volt_set -= VOLT_SET_SLOW_STEP;
+		break;
+	}
+	if(volt_set<0)
+	{
+		volt_set = 0;
 	}
 }
-static void GuiAddCurrentSet()
+static void GuiAddCurrentSet(e_encoder_speed_t speed)
 {
+	switch(speed)
+	{
+	case ENCODER_SPEED_FAST:
+		current_set += VOLT_SET_FAST_STEP;
+		break;
+	case ENCODER_SPEED_NORMAL:
+		current_set += VOLT_SET_NORMAL_STEP;
+		break;
+	case ENCODER_SPEED_SLOW:
+		current_set += VOLT_SET_SLOW_STEP;
+		break;
+	}
 	if(current_set < CURRENT_SET_MAX)
 	{
 		current_set += 0.05;
 	}
 }
-static void GuiMinusCurrentSet()
+static void GuiMinusCurrentSet(e_encoder_speed_t speed)
 {
 	if(current_set > 0.00001)
 	{
