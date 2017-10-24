@@ -476,6 +476,16 @@
               <FileType>1</FileType>
               <FilePath>.\adc.c</FilePath>
             </File>
+            <File>
+              <FileName>pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\spi.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -3,6 +3,7 @@
 static encoder_callback encoder_up_callback;
 static encoder_callback encoder_down_callback;
 static unsigned long up_cnt = 0, down_cnt = 0;//for encoder pulse counter
+static unsigned char encoder_gui_enable = 0;//0--disable, 1--enable
 static void NVIC_Configuration(void)
 {
 	NVIC_InitTypeDef NVIC_InitStructure;
@@ -75,17 +76,29 @@ void EXTI15_10_IRQHandler(void)
 }
 int EncoderGet()
 {
-	if(up_cnt > 0)
+	if(encoder_gui_enable == 1)
 	{
-		up_cnt--;
-		return 1;
-	}
-	else if(down_cnt > 0)
-	{
-		down_cnt--;
-		return -1;
+		if(up_cnt > 0)
+		{
+			up_cnt--;
+			return 1;
+		}
+		else if(down_cnt > 0)
+		{
+			down_cnt--;
+			return -1;
+		}
 	}
 	return 0;
+}
+
+void EncoderGuiEnable()
+{
+	encoder_gui_enable = 1;
+}
+void EncoderGuiDisable()
+{
+	encoder_gui_enable = 0;
 }
 
 int EncoderRegistCallback(encoder_callback upCallback, encoder_callback downCallback)

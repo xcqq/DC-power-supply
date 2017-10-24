@@ -53,7 +53,17 @@ static uint8_t u8x8_gpio_and_delay(u8x8_t *u8g2, uint8_t msg, uint8_t arg_int, v
 		}
 		break;
 	case U8X8_MSG_GPIO_MENU_SELECT:
-		if(GPIO_GET(GPIO_ENCODER_PORT, GPIO_ENCODER_BUTTON))
+		if(GPIO_GET(GPIO_ENCODER_PORT, GPIO_ENCODER_BUTTON) && GPIO_GET(GPIO_BUTTON_PORT, GPIO_BUTTON_SELECT))
+		{
+			u8g2->gpio_result = 1;
+		}
+		else
+		{
+			u8g2->gpio_result = 0;
+		}
+		break;
+	case U8X8_MSG_GPIO_MENU_HOME:
+		if(GPIO_GET(GPIO_BUTTON_PORT, GPIO_BUTTON_HOME))
 		{
 			u8g2->gpio_result = 1;
 		}
@@ -78,6 +88,7 @@ static uint8_t u8x8_byte_hw_spi(u8x8_t *u8g2, uint8_t msg, uint8_t arg_int, void
 	{
 	case U8X8_MSG_BYTE_SEND:
 		data = (uint8_t *)arg_ptr;
+
 		SPISendBytes(data,arg_int);
 		break;
 	case U8X8_MSG_BYTE_INIT:

@@ -33,7 +33,7 @@ void CalibrationInit(s_calibration_t *calibration, uint8_t point_num, uint8_t sc
 uint8_t CalibrationGetPointSetValue(s_calibration_t *calibration, uint8_t index, uint16_t *value);
 uint8_t CalibrationSetPoint(s_calibration_t *calibration, uint8_t index, uint16_t set, uint16_t real);
 uint8_t CalibrationUpdateFitting(s_calibration_t *calibration);
-uint8_t CalibrationCalcValue(s_calibration_t *calibration, float *real_value, uint16_t input_value);
+uint8_t CalibrationCalcValue(s_calibration_t *calibration, uint16_t *real_value, uint16_t input_value);
 
 extern s_calibration_t calibration_real_volt;
 extern s_calibration_t calibration_real_current;

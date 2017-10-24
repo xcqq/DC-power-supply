@@ -8,6 +8,17 @@ s_key_t key_list[] =
 	{ KEY_ID_END },
 };
 
+void GPIOButtonInit(void)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_BUTTON_ALL;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIO_BUTTON_PORT, &GPIO_InitStructure);
+}
+
 void GPIOEncoderInit(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;

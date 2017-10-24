@@ -6,6 +6,8 @@ s_calibration_t calibration_real_current;
 s_calibration_t calibration_set_volt;
 s_calibration_t calibration_set_current;
 
+float volt_calibration_value[] = {0,1.0,5.0,10.0,20.0,30.0};
+float current_calibration_value[] = { 0, 0.05, 0.1, 0.5, 1, 3, 5 }; 
 void CalibrationInit(s_calibration_t *calibration,uint8_t point_num, uint8_t scaling)
 {
 	calibration->point_num = point_num;
@@ -60,7 +62,7 @@ uint8_t CalibrationUpdateFitting(s_calibration_t *calibration)
 	}
 }
 
-uint8_t CalibrationCalcValue(s_calibration_t *calibration,float *real_value,uint16_t input_value)
+uint8_t CalibrationCalcValue(s_calibration_t *calibration,uint16_t *real_value,uint16_t input_value)
 {
 	uint8_t i;
 	if(calibration->point_num != 0)

@@ -29,6 +29,13 @@
 #define GPIO_ENCODER_C			GPIO_Pin_13
 #define GPIO_ENCODER_ALL		GPIO_ENCODER_BUTTON | GPIO_ENCODER_A | GPIO_ENCODER_C
 
+/*for button*/
+#define GPIO_BUTTON_PORT		GPIOB
+#define GPIO_BUTTON_SELECT		GPIO_Pin_12
+#define GPIO_BUTTON_HOME		GPIO_Pin_13
+#define GPIO_BUTTON_ALL			GPIO_BUTTON_SELECT | GPIO_BUTTON_HOME
+
+
 /*for voltage and current adc*/
 #define GPIO_ADC_PORT			GPIOB
 #define GPIO_ADC_VOLT			GPIO_Pin_0
@@ -67,7 +74,7 @@ typedef struct
 }s_key_t;
 
 
-
+void GPIOButtonInit(void);
 void GPIOOledSWInit(void);
 void GPIOEncoderInit(void);
 void GPIOADCConfig(void);

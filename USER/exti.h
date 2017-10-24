@@ -6,7 +6,7 @@
 #define EXTI_ENCODER_PORT 	GPIO_PortSourceGPIOC
 #define EXTI_ENCODER_PIN 	GPIO_PinSource14
 #define ENCODER_THRESHOLD_FAST 20
-#define ENCODER_THRESHOLD_SLOW 200
+#define ENCODER_THRESHOLD_SLOW 100
 
 typedef void (*encoder_callback)(uint8_t speed); 
 
@@ -22,5 +22,7 @@ int EncoderGet();
 int EncoderRegistCallback(encoder_callback upCallback, encoder_callback downCallback);
 int EncoderUnregistCallback();
 uint8_t EncoderGetSpeed();
+void EncoderGuiEnable();
+void EncoderGuiDisable();
 
 #endif /* __XXX_H */
