@@ -8,6 +8,7 @@
 #include "gui.h"
 #include "spi.h"
 #include "pwm.h"
+#include "stmflash.h"
 #include <stdio.h>
 
 extern u8g2_t u8g2;

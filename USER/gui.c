@@ -185,6 +185,10 @@ void GuiPageOutput(e_gui_page_t *page)
 	static uint8_t state = 0;
 	char buf[20];
 	uint16_t temp;
+	CalibrationCalcValue(&calibration_real_volt, &temp, GetADCResult(ADC_VOLT));
+	volt_real = (float)temp / calibration_real_volt.scaling;
+	CalibrationCalcValue(&calibration_real_current, &temp, GetADCResult(ADC_CURRENT));
+	current_real = (float)temp / calibration_real_current.scaling;
 	u8g2_SetDrawColor(&u8g2, 1);
 	u8g2_DrawBox(&u8g2, 0, 0, 128, 10);
 	u8g2_DrawBox(&u8g2, 0, 30, 128, 10);
@@ -197,9 +201,9 @@ void GuiPageOutput(e_gui_page_t *page)
 	u8g2_SetDrawColor(&u8g2, 1);
 	u8g2_SetFont(&u8g2, u8g2_font_8x13_mf);
 	sprintf(buf, "V:%05.2f", volt_real);
-	u8g2_DrawStr(&u8g2, 5, 13, buf);
-	sprintf(buf, "I:%4.2f", current_real);
-	u8g2_DrawStr(&u8g2, 68, 13, buf);
+	u8g2_DrawStr(&u8g2, 3, 13, buf);
+	sprintf(buf, "I:%5.3f", current_real);
+	u8g2_DrawStr(&u8g2, 65, 13, buf);
 	sprintf(buf, "V:%05.2f", volt_set);
 	if(state == 0)
 	{
@@ -209,7 +213,7 @@ void GuiPageOutput(e_gui_page_t *page)
 	{
 		u8g2_SetDrawColor(&u8g2, 0); 
 	}
-	u8g2_DrawStr(&u8g2, 5, 43, buf);
+	u8g2_DrawStr(&u8g2, 3, 43, buf);
 	sprintf(buf, "I:%4.2f", current_set);
 	if(state == 0)
 	{
@@ -219,7 +223,7 @@ void GuiPageOutput(e_gui_page_t *page)
 	{
 		u8g2_SetDrawColor(&u8g2, 1);
 	}
-	u8g2_DrawStr(&u8g2, 68, 43, buf);
+	u8g2_DrawStr(&u8g2, 65, 43, buf);
 	switch(KeyPressCheck(KEY_ID_ENCODER))
 	{
 	case key_short_press:
@@ -245,10 +249,13 @@ void GuiPageOutput(e_gui_page_t *page)
 		break;
 	}
 	
-	CalibrationCalcValue(&calibration_real_volt, &temp, (uint16_t)(volt_set * calibration_real_volt.scaling));
-	raw_volt_set = temp;
+	CalibrationCalcValue(&calibration_set_volt, &temp, (uint16_t)(volt_set * calibration_set_volt.scaling));
+	raw_volt_set = temp; 
+	CalibrationCalcValue(&calibration_set_current, &temp, (uint16_t)(current_set * calibration_set_current.scaling));
+	raw_current_set = temp;
+	
 	TIM_SetCompare1(TIM1, raw_volt_set); 
-	TIM_SetCompare2(TIM1, raw_current_set); 
+	TIM_SetCompare2(TIM1, raw_current_set);
 	
 }
 void GuiPageMenu(e_gui_page_t *page)
@@ -292,16 +299,18 @@ void GuiPageCalibration(e_gui_page_t *page)
 		ret = u8g2_UserInterfaceMessage(&u8g2, "Volt Calibration\n", buf, "\n", "  Next  \n  Cancel  ");
 		if(ret == 1)
 		{
-			if(i < 5)
+			if(i < CALIBRATION_POINT_NUM)
 			{
-				//CalibrationSetPoint(&calibration_real_volt, i, (uint16_t)(volt_calibration_value[i] * calibration_real_volt.scaling), raw_volt_set);
-				CalibrationSetPoint(&calibration_real_volt, i, raw_volt_set, (uint16_t)(volt_calibration_value[i] * calibration_real_volt.scaling));
+				CalibrationSetPoint(& calibration_real_volt, i,  (uint16_t)(volt_calibration_value[i] * calibration_real_volt.scaling), GetADCResult(ADC_VOLT));
+				CalibrationSetPoint(&calibration_set_volt, i, raw_volt_set, (uint16_t)(volt_calibration_value[i] * calibration_set_volt.scaling));
 				i++;
 			}
 			else
 			{
+				CalibrationUpdateFitting(&calibration_set_volt);
 				CalibrationUpdateFitting(&calibration_real_volt);
 				GuiPopOut("Volt calibration", "complete!", "");
+				SaveConfig();
 				break;
 			}
 		}
@@ -310,6 +319,7 @@ void GuiPageCalibration(e_gui_page_t *page)
 			EncoderUnregistCallback();
 		}
 		TIM_SetCompare1(TIM1, raw_volt_set);
+		TIM_SetCompare2(TIM1, 65535); 
 	}
 	i = 0;
 	EncoderRegistCallback(GuiAddRawCurrentSet, GuiMinusRawCurrentSet);
@@ -319,21 +329,26 @@ void GuiPageCalibration(e_gui_page_t *page)
 		ret = u8g2_UserInterfaceMessage(&u8g2, "Volt Calibration\n", buf, "\n", "  Next  \n  Cancel  ");
 		if(ret==1)
 		{
-			if(i < 6)
+			if(i < CALIBRATION_POINT_NUM)
 			{
-				CalibrationSetPoint(&calibration_real_current, i, (uint16_t)(current_calibration_value[i] * calibration_real_current.scaling), raw_current_set);
+				CalibrationSetPoint(&calibration_real_current, i, (uint16_t)(current_calibration_value[i] * calibration_real_current.scaling), GetADCResult(ADC_CURRENT));
+				CalibrationSetPoint(&calibration_set_current, i, raw_current_set, (uint16_t)(current_calibration_value[i] * calibration_set_current.scaling));
 				i++;
 			}
 			else
 			{
-				CalibrationUpdateFitting(&calibration_real_volt);
+				CalibrationUpdateFitting(&calibration_set_current);
+				CalibrationUpdateFitting(&calibration_real_current);
 				GuiPopOut("Current calibration", "complete!", "");
+				SaveConfig(); 
 				break;
 			}
 		}
 		else if(ret == 2)
 		{
+			EncoderUnregistCallback(); 
 		}
+		TIM_SetCompare1(TIM1, 65535); 
 		TIM_SetCompare2(TIM1, raw_current_set);
 	}
 	*page = GUI_PAGE_SETTING;

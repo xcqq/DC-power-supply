@@ -7,7 +7,7 @@
 
 #include "include.h"
 
-
+#define CALIBRATION_POINT_NUM 5
 
 typedef struct
 {
@@ -23,10 +23,10 @@ typedef struct
 
 typedef struct
 {
-	uint8_t point_num;
 	uint8_t scaling;
-	s_calibration_point_t *point;
-	s_calibration_fitting_t *fitting;
+	uint8_t fitting_flag;
+	s_calibration_point_t point[CALIBRATION_POINT_NUM];
+	s_calibration_fitting_t fitting[CALIBRATION_POINT_NUM - 1];
 }s_calibration_t;
 
 void CalibrationInit(s_calibration_t *calibration, uint8_t point_num, uint8_t scaling);

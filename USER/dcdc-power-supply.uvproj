@@ -486,6 +486,16 @@
               <FileType>1</FileType>
               <FilePath>.\spi.c</FilePath>
             </File>
+            <File>
+              <FileName>stmflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\stmflash.c</FilePath>
+            </File>
+            <File>
+              <FileName>config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\config.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

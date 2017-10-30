@@ -36,7 +36,7 @@ static void ADCModeConfig(void)
 	ADC_Init(ADC1, &ADC_InitStructure);
 	
 
-	RCC_ADCCLKConfig(RCC_PCLK2_Div2);
+	RCC_ADCCLKConfig(RCC_PCLK2_Div8);
 	ADC_RegularChannelConfig(ADC1, ADC_Channel_8, 1, ADC_SampleTime_239Cycles5);
 	ADC_RegularChannelConfig(ADC1, ADC_Channel_8, 2, ADC_SampleTime_239Cycles5);
 	ADC_RegularChannelConfig(ADC1, ADC_Channel_8, 3, ADC_SampleTime_239Cycles5);
@@ -75,3 +75,17 @@ void ADCInit(void)
 	ADCModeConfig();
 }
 
+
+uint16_t GetADCResult(e_adc_channel_t channel)
+{
+	if(channel == ADC_VOLT)
+	{
+		//return (uint16_t)((uint32_t)(adc_converted_value[0] + adc_converted_value[1] + adc_converted_value[2] + adc_converted_value[3]) * 1489 / adc_converted_value[8]);
+		return (uint16_t)((uint32_t)(adc_converted_value[0] + adc_converted_value[1] + adc_converted_value[2] + adc_converted_value[3])); 
+	}
+	else if(channel == ADC_CURRENT)
+	{
+		return (uint16_t)((uint32_t)(adc_converted_value[4] + adc_converted_value[5] + adc_converted_value[6] + adc_converted_value[7]) * 1489 / adc_converted_value[8]);
+		return (uint16_t)((uint32_t)(adc_converted_value[4] + adc_converted_value[5] + adc_converted_value[6] + adc_converted_value[7]));
+	}
+}
